@@ -1,0 +1,18 @@
+{
+  "name": "clem",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Clem — AI chat platform",
+  "workspaces": [
+    "shared",
+    "backend"
+  ],
+  "scripts": {
+    "build": "npm run build -w @clem/backend",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "dev:backend": "npm run build -w @clem/shared && npm run dev -w @clem/backend"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

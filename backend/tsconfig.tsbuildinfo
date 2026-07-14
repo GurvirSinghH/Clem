@@ -1,0 +1,1 @@
+{"root":["./src/app.ts","./src/index.ts","./src/api/middleware/error-handler.ts","./src/api/routes/health.routes.ts","./src/config/env.ts","./src/errors/app-error.ts"],"version":"5.9.3"}

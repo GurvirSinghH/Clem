@@ -265,3 +265,14 @@ Use this structure whenever possible.
 Every commit should leave the project in a clean, working state.
 
 Build Clem as if it were a real product intended for public release, not just a college assignment.
+
+## Project Source of Truth
+
+Before implementing UI changes, always read:
+
+1. DESIGN.md
+2. TOKENS.md
+
+Never invent colors, spacing, typography, motion, or layout values.
+
+All UI decisions must come from these documents.

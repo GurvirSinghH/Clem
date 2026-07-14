@@ -5,12 +5,14 @@
   "description": "Clem — AI chat platform",
   "workspaces": [
     "shared",
-    "backend"
+    "backend",
+    "frontend"
   ],
   "scripts": {
-    "build": "npm run build -w @clem/backend",
+    "build": "npm run build -w @clem/backend && npm run build -w @clem/frontend",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "dev:backend": "npm run build -w @clem/shared && npm run dev -w @clem/backend"
+    "dev:backend": "npm run build -w @clem/shared && npm run dev -w @clem/backend",
+    "dev:frontend": "npm run build -w @clem/shared && npm run dev -w @clem/frontend"
   },
   "engines": {
     "node": ">=20"

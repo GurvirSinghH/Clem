@@ -2,7 +2,7 @@
 
 Clem is a production-quality AI chat platform. It starts as a focused single-provider chatbot and evolves into a multi-model AI workspace without major rewrites.
 
-**Status:** M1 complete — workspace, shared contract package, and backend foundation running. Next: M2 (provider layer + chat endpoint), pending approval.
+**Status:** M4B.2 complete — composer wired to the backend (send/receive/loading/errors, interim conversation view), awaiting review before M4B.3 (real conversation UI). Open items: `ANTHROPIC_API_KEY` for the live happy path; rail mobile pattern approval.
 **Last updated:** 2026-07-14
 
 ---
@@ -51,14 +51,15 @@ Clem/
 ## Environment & Secrets
 
 - All AI provider API keys live **backend-only**, loaded from `backend/.env` (gitignored). The frontend never sees a key.
-- Key variables: `ANTHROPIC_API_KEY`, `AI_PROVIDER` (e.g. `anthropic`), `AI_MODEL`, `PORT`.
+- Key variables: `ANTHROPIC_API_KEY` (required), `AI_PROVIDER` (default `anthropic`), `AI_MODEL` (default `claude-opus-4-8`), `AI_MAX_TOKENS` (default 16000), `PORT` (default 4000).
 
 ## Running Locally
 
 ```bash
 npm install            # once, at the repo root
-npm run build          # builds shared + backend (tsc project references)
+npm run build          # builds shared + backend + frontend
 npm run dev:backend    # backend on http://localhost:4000 with hot reload (tsx watch)
+npm run dev:frontend   # frontend on http://localhost:5173; /api proxied to :4000
 npm run typecheck      # typecheck all workspaces
 ```
 

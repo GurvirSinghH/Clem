@@ -33,11 +33,9 @@
 
 ## Workspace Layout
 
-Items marked *(M2)* / *(M3)* are designed but not yet implemented. The root `workspaces` array currently lists only `shared` and `backend`; `frontend` is added in M3 (npm errors on a listed workspace that has no `package.json` yet).
-
 ```
 Clem/
-├── package.json                # workspaces: ["shared", "backend"] (+ "frontend" in M3)
+├── package.json                # workspaces: ["shared", "backend", "frontend"]
 ├── tsconfig.base.json          # shared compiler options; packages extend it
 ├── shared/
 │   └── src/
@@ -49,23 +47,30 @@ Clem/
 │       ├── app.ts              # createApp() — wires middleware + routes; testable without listening
 │       ├── config/             # env parsing + validation (fail fast at boot)
 │       ├── api/
-│       │   ├── routes/         # health.routes.ts, chat.routes.ts (M2)
-│       │   └── middleware/     # error handler, 404 handler, request validation (M2)
-│       ├── services/           # chat.service.ts (M2)
-│       ├── providers/          # (M2)
+│       │   ├── routes/         # health.routes.ts, chat.routes.ts
+│       │   ├── schemas/        # zod request schemas (chat.schema.ts)
+│       │   └── middleware/     # error handler, 404 handler
+│       ├── services/           # chat.service.ts — provider selection + orchestration
+│       ├── providers/
 │       │   ├── types.ts        # AIProvider interface, provider-level types
-│       │   ├── registry.ts     # id → provider factory, selected via config
-│       │   └── anthropic/      # first implementation
+│       │   ├── registry.ts     # id → provider factory (lazy singleton), selected via AI_PROVIDER
+│       │   └── anthropic/      # ONLY place the Anthropic SDK appears
 │       └── errors/             # AppError class (maps ErrorCode → HTTP status)
-└── frontend/                   # (M3)
+└── frontend/                   # Vite + React + TS + Tailwind; /api proxied to Express in dev
     └── src/
-        ├── components/         # chat/, layout/, ui/ (owned by product design)
+        ├── App.tsx             # thin — renders ChatPage
+        ├── styles/
+        │   ├── tokens.css      # TOKENS.md as Tailwind @theme — the only CSS source of visual values
+        │   └── globals.css     # fonts, base styles, focus ring, reduced-motion
+        ├── components/
+        │   ├── ui/             # primitives: Surface, Button, IconButton, Container,
+        │   │                   #   NavRail, Composer, WorkspaceShell (+ ambient background)
+        │   └── chat/           # page level: ChatPage (composition), Greeting; message components (M4B.2)
         ├── hooks/              # useChat — all chat state lives here
-        ├── lib/                # api.ts — the ONLY module that touches fetch
-        └── types/              # re-exports from shared
+        └── lib/                # api.ts (ONLY fetch module) · motion.ts · greeting.ts · cn.ts
 ```
 
-Build: TypeScript project references — `backend` references `shared`, so `tsc -b` in the backend builds both in order. `@clem/shared` is consumed through its built `dist/` via the workspace symlink.
+Build: TypeScript project references — `backend` references `shared`, so `tsc -b` in the backend builds both in order. `@clem/shared` is consumed through its built `dist/` via the workspace symlink. The frontend imports `@clem/shared` directly (no local re-export layer) and has its own `tsconfig.json` — the shared base config targets Node (`module: NodeNext`), while Vite needs `moduleResolution: bundler` + JSX.
 
 ---
 

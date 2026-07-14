@@ -1,0 +1,207 @@
+/*
+ * Clem design tokens — the only CSS expression of TOKENS.md (v1.1).
+ * TOKENS.md is the source of truth. Every visual value in the app resolves here.
+ * lib/motion.ts mirrors the motion values for Framer Motion — keep both in sync
+ * with TOKENS.md, never with each other ad hoc.
+ *
+ * The `--<namespace>-*: initial` lines wipe Tailwind's default palette/scales,
+ * so ONLY semantic tokens exist as utilities. "No hardcoded colors/spacing"
+ * is thereby enforced structurally, not by convention.
+ */
+
+@theme {
+  /* ---------- Color ---------- */
+  --color-*: initial;
+
+  /* Environment */
+  --color-background: #0f0f10;
+  --color-background-lift: #17171a;
+  --color-surface: #17171a;
+  --color-surface-elevated: #1e1e22;
+  --color-surface-overlay: #26262b;
+
+  /* Text */
+  --color-text-primary: #f2f1ee;
+  --color-text-secondary: #a9a7a0;
+  --color-text-muted: #7c7a72;
+
+  /* Structure */
+  --color-border: rgb(255 255 255 / 0.08);
+  --color-border-strong: rgb(255 255 255 / 0.14);
+
+  /* Accent — champagne gold. Allowlist: primary action, focus, active nav, editorial links. */
+  --color-accent: #d9c29a;
+  --color-accent-hover: #e6d4b2;
+  --color-accent-pressed: #c1a97e;
+  --color-on-accent: #141414;
+
+  /* Feedback */
+  --color-success: #8fbf95;
+  --color-warning: #d9b36a;
+  --color-error: #e08573;
+  --color-focus: var(--color-accent);
+
+  /* ---------- Typography families ---------- */
+  --font-*: initial;
+  --font-editorial: "Newsreader Variable", Georgia, serif;
+  --font-ui: "Instrument Sans Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+
+  /* ---------- Spacing — exactly the ten TOKENS.md steps ---------- */
+  --spacing-*: initial;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 24px;
+  --spacing-6: 32px;
+  --spacing-7: 40px;
+  --spacing-8: 48px;
+  --spacing-9: 64px;
+  --spacing-10: 96px;
+
+  /* ---------- Radius ---------- */
+  --radius-*: initial;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* ---------- Shadows (elevation is primarily surface lightening) ---------- */
+  --shadow-*: initial;
+  --shadow-float: 0 4px 24px rgb(0 0 0 / 0.35);
+  --shadow-overlay: 0 12px 48px rgb(0 0 0 / 0.5);
+
+  /* ---------- Easing ---------- */
+  --ease-*: initial;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* ---------- Blur ---------- */
+  --blur-*: initial;
+  --blur-glass: 20px;
+  --blur-ambient: 90px;
+
+  /* ---------- Layout widths (max-w-reading / -content / -composer) ---------- */
+  --container-*: initial;
+  --container-reading: 680px;
+  --container-content: 768px;
+  --container-composer: 680px;
+}
+
+/* Tokens referenced via var() rather than generated utilities. */
+:root {
+  /* Motion durations (mirrored in lib/motion.ts for Framer) */
+  --duration-instant: 100ms;
+  --duration-fast: 180ms;
+  --duration-base: 240ms;
+  --duration-slow: 400ms;
+  --duration-ambient: 40s;
+
+  /* Letter spacing */
+  --tracking-display: -0.015em;
+  --tracking-wide: 0.06em;
+
+  /* Layering */
+  --z-ambient: -1;
+  --z-base: 0;
+  --z-rail: 10;
+  --z-composer: 20;
+  --z-overlay: 30;
+  --z-modal: 40;
+  --z-toast: 50;
+
+  /* Layout */
+  --width-rail: 64px;
+  --height-composer-max: 40vh;
+
+  /* Accessibility */
+  --size-touch: 44px;
+}
+
+/* ---------- Typography — semantic HTML + these classes; no Text component ---------- */
+
+@utility type-display {
+  font-family: var(--font-editorial);
+  font-size: 40px;
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: var(--tracking-display);
+}
+
+@utility type-h1 {
+  font-family: var(--font-ui);
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+@utility type-h2 {
+  font-family: var(--font-ui);
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+@utility type-h3 {
+  font-family: var(--font-ui);
+  font-size: 19px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+@utility type-body {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+@utility type-compact {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+@utility type-small {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 400;
+}
+
+@utility type-caption {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+@utility type-code {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* ---------- Motion choreography (TOKENS.md → Motion → Named choreography) ---------- */
+
+/* Level 1: hover — color/opacity feedback. */
+@utility motion-hover {
+  transition-property: color, background-color, border-color, opacity;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-standard);
+}
+
+/* Levels 1+2 combined for interactive controls: fast hover, instant press weight. */
+@utility motion-interactive {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-duration: var(--duration-fast), var(--duration-fast),
+    var(--duration-fast), var(--duration-fast), var(--duration-instant);
+  transition-timing-function: var(--ease-standard);
+
+  &:active {
+    transform: scale(0.98);
+  }
+}

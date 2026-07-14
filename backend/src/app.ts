@@ -1,4 +1,5 @@
 import express from "express";
+import { chatRouter } from "./api/routes/chat.routes.js";
 import { healthRouter } from "./api/routes/health.routes.js";
 import {
   errorHandler,
@@ -11,6 +12,7 @@ export function createApp(): express.Express {
   app.use(express.json({ limit: "1mb" }));
 
   app.use("/api/health", healthRouter);
+  app.use("/api/chat", chatRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

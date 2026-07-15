@@ -11,6 +11,7 @@ const envSchema = z
     AI_MODEL: z.string().min(1).default("claude-opus-4-8"),
     AI_MAX_TOKENS: z.coerce.number().int().positive().default(16000),
     ANTHROPIC_API_KEY: z.string().min(1).optional(),
+    GEMINI_API_KEY: z.string().min(1).optional(),
   })
   .superRefine((config, ctx) => {
     if (config.AI_PROVIDER === "anthropic" && !config.ANTHROPIC_API_KEY) {
@@ -18,6 +19,13 @@ const envSchema = z
         code: z.ZodIssueCode.custom,
         path: ["ANTHROPIC_API_KEY"],
         message: "ANTHROPIC_API_KEY is required when AI_PROVIDER is 'anthropic'",
+      });
+    }
+    if (config.AI_PROVIDER === "gemini" && !config.GEMINI_API_KEY) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["GEMINI_API_KEY"],
+        message: "GEMINI_API_KEY is required when AI_PROVIDER is 'gemini'",
       });
     }
   });

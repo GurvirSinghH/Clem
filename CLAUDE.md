@@ -1,3 +1,18 @@
+## Session Startup
+
+Before implementing anything:
+
+1. Read HANDOFF.md
+2. Read PROJECT.md
+3. Read ARCHITECTURE.md
+4. Read DESIGN.md
+5. Read TOKENS.md
+6. Read TASKS.md
+
+Summarize your understanding before making changes.
+
+Never assume context from previous sessions.
+
 # Clem
 
 You are the senior software architect and full-stack engineer for this project.

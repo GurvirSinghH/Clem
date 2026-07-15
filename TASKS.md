@@ -1,7 +1,7 @@
 # Clem — Tasks & Milestones
 
-**Last updated:** 2026-07-14
-**Current milestone:** M4B.2 complete (composer wired to backend) — awaiting review, then M4B.3 (conversation UI). Still open: `ANTHROPIC_API_KEY` for the live happy path; rail mobile pattern approval
+**Last updated:** 2026-07-15
+**Current milestone:** M2.5 fully verified (Gemini live happy path confirmed) and M4B.2 complete (composer wired to backend) — awaiting review, then M4B.3 (conversation UI). Still open: `ANTHROPIC_API_KEY` for the Anthropic live happy path; rail mobile pattern approval
 
 Every milestone ends with the project in a clean, working state and the docs updated.
 
@@ -29,6 +29,13 @@ Every milestone ends with the project in a clean, working state and the docs upd
 - [x] `POST /api/chat` with zod validation (role-order rules enforced)
 - [x] Verified: fail-fast boot without key; 400 `VALIDATION_ERROR` envelopes; invalid key → 502 `PROVIDER_ERROR` (normalized, no SDK leak)
 - [ ] Verified end-to-end with a real API call — **blocked on `ANTHROPIC_API_KEY` in `backend/.env`**
+
+## M2.5 — Second Provider: Google Gemini (architecture validation)
+
+- [x] `GeminiProvider` implements `AIProvider` via `@google/genai` (role mapping, usage metadata, all SDK errors normalized — nothing Gemini-typed escapes the folder)
+- [x] Registry: one factory entry; config: `GEMINI_API_KEY` required only when `AI_PROVIDER=gemini`; `AI_MODEL` always explicit (never inferred)
+- [x] Verified: fail-fast boot naming `GEMINI_API_KEY`; invalid key → normalized 502 `PROVIDER_ERROR`; frontend bundle hash byte-identical (zero frontend changes)
+- [x] Valid-key happy path — **verified 2026-07-15**. Root cause of the prior 502: `AI_MODEL=gemini-2.5-flash` is retired for new API users (Gemini returned 404 `NOT_FOUND` — "no longer available to new users"), which normalized correctly to `PROVIDER_ERROR`/502. Fix was config-only: `AI_MODEL=gemini-3.5-flash` (current stable GA model, same `generateContent` call — provider code untouched). Verified live through the Vite `/api` proxy (real browser transport): 200 + normalized `ChatResponse`; frontend and shared contract byte-identical (zero changes); usage captured at the provider boundary (`ChatCompletionResult.usage`) but intentionally not surfaced by the v0.1 `ChatResponse` (Decision #4)
 
 ## M3 — Frontend Foundation (initialization complete; no UI by product-owner direction)
 
@@ -98,5 +105,7 @@ Streaming responses · multiple providers · model switching · chat history + d
 
 ## Changelog
 
+- **2026-07-15** — M2.5 verification closed: Gemini live happy path confirmed end-to-end through the browser transport (Vite `/api` proxy → Express → provider → normalized `ChatResponse`, 200). Root cause of the earlier 502 was a retired model id (`gemini-2.5-flash`, 404 `NOT_FOUND` for new API users), diagnosed via temporary provider-only instrumentation and fixed config-only (`AI_MODEL=gemini-3.5-flash`, current stable GA). Provider/service/contract/frontend all unchanged; temporary instrumentation removed after diagnosis.
+- **2026-07-15** — M2.5 completed: Google Gemini added as second provider. Change surface: one provider folder, one registry entry, one env-validation branch, one dependency — frontend/contract/service untouched, validating the provider abstraction.
 - **2026-07-14** — M1 completed: workspace root, shared contract package, Express foundation with config validation and centralized error handling. Verified running.
 - **2026-07-14** — M0 completed: architecture reviewed and documented.

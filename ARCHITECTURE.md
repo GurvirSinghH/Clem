@@ -54,7 +54,8 @@ Clem/
 │       ├── providers/
 │       │   ├── types.ts        # AIProvider interface, provider-level types
 │       │   ├── registry.ts     # id → provider factory (lazy singleton), selected via AI_PROVIDER
-│       │   └── anthropic/      # ONLY place the Anthropic SDK appears
+│       │   ├── anthropic/      # ONLY place the Anthropic SDK appears
+│       │   └── gemini/         # ONLY place the Google Gen AI SDK appears
 │       └── errors/             # AppError class (maps ErrorCode → HTTP status)
 └── frontend/                   # Vite + React + TS + Tailwind; /api proxied to Express in dev
     └── src/
@@ -155,6 +156,8 @@ A single Express error-handling middleware converts `AppError` → `ApiErrorBody
 | 5 | Normalized `ErrorCode` taxonomy at the provider boundary | Frontend stays provider-agnostic even for failures | Passing provider errors through — leaks provider identity and internals |
 | 6 | zod at the API boundary | Runtime validation + inferred static types from one schema | Hand-rolled validation — verbose, drifts from types |
 | 7 | Anthropic Claude as first provider | Config-driven; swappable via `AI_PROVIDER` env | n/a — arbitrary starting point by design |
+| 8 | Second provider (Gemini, M2.5) validated the seam | Adding it touched exactly: one provider folder, one registry entry, one env-validation branch, one dependency. Frontend, shared contract, service, routes: zero changes (bundle hash identical) | n/a — this was the test of decisions 3–5, and they held |
+| 9 | `AI_MODEL` is always explicit; never inferred from provider | One knob, one meaning; misconfigured pairs fail loudly through the normalized error path | Provider-aware model defaults — rejected by product owner to keep configuration explicit |
 
 ## Future Feature Map
 

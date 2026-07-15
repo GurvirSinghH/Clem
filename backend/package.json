@@ -12,6 +12,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.111.0",
     "@clem/shared": "*",
+    "@google/genai": "^2.11.0",
     "dotenv": "^16.4.5",
     "express": "^5.1.0",
     "zod": "^3.24.0"

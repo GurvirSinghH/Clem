@@ -33,7 +33,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md#future-feature-map) for how each maps on
 | Frontend | React, Vite, TypeScript, Tailwind CSS, Framer Motion, React Markdown, React Syntax Highlighter, Lucide React |
 | Backend | Node.js, Express, TypeScript, zod (runtime validation) |
 | Shared | TypeScript types package (npm workspaces) |
-| AI Provider | Anthropic Claude (first implementation; config-driven) |
+| AI Providers | Anthropic Claude, Google Gemini (config-driven via `AI_PROVIDER` + `AI_MODEL`) |
 
 ## Repository Layout
 
@@ -51,7 +51,7 @@ Clem/
 ## Environment & Secrets
 
 - All AI provider API keys live **backend-only**, loaded from `backend/.env` (gitignored). The frontend never sees a key.
-- Key variables: `ANTHROPIC_API_KEY` (required), `AI_PROVIDER` (default `anthropic`), `AI_MODEL` (default `claude-opus-4-8`), `AI_MAX_TOKENS` (default 16000), `PORT` (default 4000).
+- Key variables: `AI_PROVIDER` (default `anthropic`), `AI_MODEL` (explicit, must match the provider), `ANTHROPIC_API_KEY` / `GEMINI_API_KEY` (each required only for its provider), `AI_MAX_TOKENS` (default 16000), `PORT` (default 4000).
 
 ## Running Locally
 

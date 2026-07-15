@@ -1,6 +1,7 @@
 import { env } from "../config/env.js";
 import { AppError } from "../errors/app-error.js";
 import { AnthropicProvider } from "./anthropic/anthropic.provider.js";
+import { GeminiProvider } from "./gemini/gemini.provider.js";
 import type { AIProvider } from "./types.js";
 
 /**
@@ -19,6 +20,15 @@ const factories: Record<string, () => AIProvider> = {
       apiKey: env.ANTHROPIC_API_KEY,
       maxTokens: env.AI_MAX_TOKENS,
     });
+  },
+  gemini: () => {
+    if (!env.GEMINI_API_KEY) {
+      throw new AppError(
+        "PROVIDER_ERROR",
+        "The AI provider is not configured on the server.",
+      );
+    }
+    return new GeminiProvider({ apiKey: env.GEMINI_API_KEY });
   },
 };
 

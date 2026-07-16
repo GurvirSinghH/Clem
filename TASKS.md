@@ -1,7 +1,7 @@
 # Clem — Tasks & Milestones
 
 **Last updated:** 2026-07-15
-**Current milestone:** M2.5 fully verified (Gemini live happy path confirmed) and M4B.2 complete (composer wired to backend) — awaiting review, then M4B.3 (conversation UI). Still open: `ANTHROPIC_API_KEY` for the Anthropic live happy path; rail mobile pattern approval
+**Current milestone:** M4B.3 complete (editorial conversation rendering — markdown mapped to Clem's type scale, desaturated code blocks) — awaiting review, then M5 (polish). Still open: `ANTHROPIC_API_KEY` for the Anthropic live happy path; rail mobile pattern approval
 
 Every milestone ends with the project in a clean, working state and the docs updated.
 
@@ -80,13 +80,16 @@ Every milestone ends with the project in a clean, working state and the docs upd
 - [x] Auto-scroll to newest message (respects reduced motion)
 - [x] Verified: build passes; full path proven live (vite proxy → Express → provider → normalized error envelope rendered by the UI path). Happy path still blocked on `ANTHROPIC_API_KEY`
 
-**M4B.3 — Conversation UI (pending)**
+**M4B.3 — Editorial Conversation Rendering ✅ (awaiting review)**
 
-- [ ] Real message components per approved message-layout direction (rail mobile pattern needs approval)
-- [ ] Markdown rendering + syntax highlighting for assistant messages
-- [ ] Loading states
-- [ ] Error display (user-friendly, from normalized error codes)
-- [ ] Responsive behavior (mobile → desktop)
+- [x] Assistant messages render markdown via `react-markdown` + `remark-gfm`, mapped to Clem's editorial type scale (`Markdown` component; document heading levels → `type-h1/h2/h3`, h4–h6 clamp to `type-h3`; paragraph rhythm at `space-5`)
+- [x] Full element coverage: headings, paragraphs, ordered/unordered lists, blockquotes, inline code, fenced code, GFM tables, task lists, strikethrough, autolinks
+- [x] Code blocks (`CodeBlock` + `react-syntax-highlighter` `PrismAsync`): desaturated token-only theme (`codeTheme.ts`, near-monochrome ink, no accent, no rainbow), `Surface` container at `radius-md`, no height cap / no internal vertical scroll — full height, page scrolls; long lines scroll horizontally only (`overflow-x-auto`)
+- [x] Prism languages code-split into an async chunk (kept out of the initial bundle)
+- [x] Message philosophy preserved: user = compact right-aligned `Surface`; assistant = bubble-less editorial prose. Entrance animation (`motion-message-in`) unchanged — keyed wrappers, so only the newest message animates and history never re-animates on scroll. Auto-scroll and error rendering untouched. No avatars / timestamps / usernames / metadata
+- [x] One token addition: `type-code-inline` utility encoding TOKENS.md's documented "inline code at 0.9em"
+- [x] Verified: typecheck + production build pass; real Gemini response (HTTP 200) exercised every element incl. a 278-char single code line; the real `<Markdown>` component server-rendered maps all 20 element checks to the correct token-classed DOM; dev server serves and Vite transforms the new modules
+- [ ] Responsive mobile behavior — still gated on rail mobile pattern approval (unchanged from M4B.2; desktop + tablet verified)
 
 ## M5 — Polish & v0.1 Release
 
@@ -105,6 +108,7 @@ Streaming responses · multiple providers · model switching · chat history + d
 
 ## Changelog
 
+- **2026-07-15** — M4B.3 completed: editorial conversation rendering. Assistant messages now render markdown (`react-markdown` + `remark-gfm`) mapped to Clem's type scale via a new `Markdown` component; fenced code renders through `CodeBlock` (`react-syntax-highlighter` `PrismAsync`) with a token-only desaturated theme (`codeTheme.ts`) — near-monochrome, no accent, no rainbow, no height cap, horizontal-only overflow scroll. Change surface: three new frontend files + one `type-code-inline` token utility + the assistant renderer swap in `ChatPage`; backend, provider abstraction, API contract, `useChat`, motion choreography, and scroll behavior all untouched. Verified via real Gemini output (all elements incl. a 278-char code line), a server-render structural pass on the real component (20/20), typecheck, and production build.
 - **2026-07-15** — M2.5 verification closed: Gemini live happy path confirmed end-to-end through the browser transport (Vite `/api` proxy → Express → provider → normalized `ChatResponse`, 200). Root cause of the earlier 502 was a retired model id (`gemini-2.5-flash`, 404 `NOT_FOUND` for new API users), diagnosed via temporary provider-only instrumentation and fixed config-only (`AI_MODEL=gemini-3.5-flash`, current stable GA). Provider/service/contract/frontend all unchanged; temporary instrumentation removed after diagnosis.
 - **2026-07-15** — M2.5 completed: Google Gemini added as second provider. Change surface: one provider folder, one registry entry, one env-validation branch, one dependency — frontend/contract/service untouched, validating the provider abstraction.
 - **2026-07-14** — M1 completed: workspace root, shared contract package, Express foundation with config validation and centralized error handling. Verified running.

@@ -12,6 +12,7 @@ import { NavRail } from "../ui/NavRail.js";
 import { Surface } from "../ui/Surface.js";
 import { WorkspaceShell } from "../ui/WorkspaceShell.js";
 import { Greeting } from "./Greeting.js";
+import { Markdown } from "./Markdown.js";
 import { ThinkingIndicator } from "./ThinkingIndicator.js";
 
 /**
@@ -112,15 +113,18 @@ export function ChatPage() {
                 </Surface>
               </motion.div>
             ) : (
-              <motion.p
+              // Assistant messages remain bubble-less editorial prose; markdown
+              // is mapped to Clem's type scale inside <Markdown>. The keyed motion
+              // wrapper is unchanged, so only the newest message animates in and
+              // history never re-animates on scroll (motion-message-in).
+              <motion.div
                 key={message.id}
                 initial={motionMessageIn.initial}
                 animate={motionMessageIn.animate}
                 transition={motionMessageIn.transition}
-                className="type-body whitespace-pre-wrap text-text-primary"
               >
-                {message.content}
-              </motion.p>
+                <Markdown>{message.content}</Markdown>
+              </motion.div>
             ),
           )}
           {isSending && <ThinkingIndicator />}

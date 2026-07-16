@@ -16,10 +16,11 @@ Current milestone
 
 ✅ M2.5 Complete
 ✅ M4B.2 Complete
+✅ M4B.3 Complete — Editorial Conversation Rendering (awaiting product-owner review)
 
 Next milestone
 
-M4B.3 — Editorial Conversation Rendering
+M5 — Polish & v0.1 Release (edge cases, motion pass, README, tag)
 
 # Backend Status
 
@@ -69,11 +70,13 @@ Completed
 - Message entrance animation
 - Landing experience
 
-Current Conversation Rendering
+Conversation Rendering
 
-Temporary implementation exists only to verify request flow.
-
-Real editorial conversation UI has not been built yet.
+- Editorial markdown rendering (M4B.3): `react-markdown` + `remark-gfm` mapped to Clem's type scale
+- `Markdown` component owns element → typography mapping; `CodeBlock` + `codeTheme.ts` own code
+- Desaturated token-only syntax theme (near-monochrome, no accent, no rainbow)
+- Code blocks: no height cap, no internal vertical scroll; long lines scroll horizontally only
+- Message philosophy, entrance animation, no-re-animate-on-scroll, and auto-scroll all preserved
 
 ---
 
@@ -179,39 +182,19 @@ Rail
 
 # Next Milestone
 
-M2.5 Verification
-
-No implementation.
-
-Verification only.
-
-Tasks
-
-- Configure GEMINI_API_KEY
-- Verify complete happy path
-- Verify Thinking indicator
-- Verify normalized response
-- Verify token usage
-- Verify frontend unchanged
-- Record results
-
-After successful verification
-
-Proceed to
-
-M4B.3
-
-Editorial Conversation Rendering
+M5 — Polish & v0.1 Release
 
 Focus
 
-- Reading rhythm
-- Typography
-- Markdown
-- Code blocks
-- Lists
-- Blockquotes
-- Long conversation readability
+- Edge cases (empty input, very long messages, provider outage, rate limit)
+- Motion/animation polish pass
+- README with setup instructions
+- Final docs update; tag v0.1
+
+Still open (carried forward)
+
+- Mobile rail pattern approval (blocks responsive mobile finish)
+- `ANTHROPIC_API_KEY` for the Anthropic live happy path (Gemini already verified live)
 
 Not new features.
 

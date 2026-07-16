@@ -185,6 +185,13 @@
   font-weight: 400;
 }
 
+/* Inline code: mono, sized relative to surrounding prose (TOKENS.md → text-code:
+   "inline code matches surrounding text at 0.9em"). Block code uses type-code. */
+@utility type-code-inline {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
 /* ---------- Motion choreography (TOKENS.md → Motion → Named choreography) ---------- */
 
 /* Level 1: hover — color/opacity feedback. */

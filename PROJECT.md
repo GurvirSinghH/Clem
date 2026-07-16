@@ -2,8 +2,8 @@
 
 Clem is a production-quality AI chat platform. It starts as a focused single-provider chatbot and evolves into a multi-model AI workspace without major rewrites.
 
-**Status:** M4B.2 complete — composer wired to the backend (send/receive/loading/errors, interim conversation view), awaiting review before M4B.3 (real conversation UI). Open items: `ANTHROPIC_API_KEY` for the live happy path; rail mobile pattern approval.
-**Last updated:** 2026-07-14
+**Status:** M4B.3 complete — editorial conversation rendering: assistant messages render markdown (headings, lists, blockquotes, inline/fenced code, GFM tables/task lists/strikethrough/autolinks) mapped to Clem's type scale, with a desaturated token-only code theme. Awaiting review before M5 (polish). Open items: `ANTHROPIC_API_KEY` for the Anthropic live happy path; rail mobile pattern approval.
+**Last updated:** 2026-07-15
 
 ---
 

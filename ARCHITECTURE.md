@@ -1,6 +1,6 @@
 # Clem — Architecture
 
-**Last updated:** 2026-07-14 (M1 — workspace, shared contract, and backend foundation implemented)
+**Last updated:** 2026-07-15 (M4B.3 — editorial conversation rendering: markdown → Clem type scale)
 
 ## Principles
 
@@ -66,9 +66,10 @@ Clem/
         ├── components/
         │   ├── ui/             # primitives: Surface, Button, IconButton, Container,
         │   │                   #   NavRail, Composer, WorkspaceShell (+ ambient background)
-        │   └── chat/           # page level: ChatPage (composition), Greeting; message components (M4B.2)
+        │   └── chat/           # page level: ChatPage (composition), Greeting, ThinkingIndicator,
+        │                       #   Markdown (element → type-scale map), CodeBlock (fenced code)
         ├── hooks/              # useChat — all chat state lives here
-        └── lib/                # api.ts (ONLY fetch module) · motion.ts · greeting.ts · cn.ts
+        └── lib/                # api.ts (ONLY fetch module) · motion.ts · greeting.ts · cn.ts · codeTheme.ts (token-only Prism theme)
 ```
 
 Build: TypeScript project references — `backend` references `shared`, so `tsc -b` in the backend builds both in order. `@clem/shared` is consumed through its built `dist/` via the workspace symlink. The frontend imports `@clem/shared` directly (no local re-export layer) and has its own `tsconfig.json` — the shared base config targets Node (`module: NodeNext`), while Vite needs `moduleResolution: bundler` + JSX.
@@ -134,7 +135,7 @@ A single Express error-handling middleware converts `AppError` → `ApiErrorBody
 
 - **State:** all chat state (messages, pending flag, error) lives in the `useChat` hook. Components are presentational. If state grows complex later, the hook migrates to a store without touching components.
 - **Transport:** `lib/api.ts` is the only file using `fetch`. Swapping to SSE/streaming later is a one-module change plus a hook update.
-- **Rendering:** assistant messages render through React Markdown with React Syntax Highlighter for code blocks.
+- **Rendering:** assistant messages render through `react-markdown` (+ `remark-gfm`) in the `Markdown` component, which maps every element to Clem's editorial type scale (tokens only). Fenced code renders via `CodeBlock` (`react-syntax-highlighter` `PrismAsync`, languages code-split) using `codeTheme.ts` — a token-only, near-monochrome Prism theme (no accent, no rainbow). Code blocks have no height cap and no internal vertical scroll; long lines scroll horizontally only.
 - UI composition, styling, and motion are product-design decisions — engineering does not redesign them.
 
 ## Backend Rules
@@ -158,6 +159,7 @@ A single Express error-handling middleware converts `AppError` → `ApiErrorBody
 | 7 | Anthropic Claude as first provider | Config-driven; swappable via `AI_PROVIDER` env | n/a — arbitrary starting point by design |
 | 8 | Second provider (Gemini, M2.5) validated the seam | Adding it touched exactly: one provider folder, one registry entry, one env-validation branch, one dependency. Frontend, shared contract, service, routes: zero changes (bundle hash identical) | n/a — this was the test of decisions 3–5, and they held |
 | 9 | `AI_MODEL` is always explicit; never inferred from provider | One knob, one meaning; misconfigured pairs fail loudly through the normalized error path | Provider-aware model defaults — rejected by product owner to keep configuration explicit |
+| 10 | Syntax theme is a token-only style object (`codeTheme.ts`), colors as `var(--color-*)` | Token discipline survives inside a third-party highlighter's inline styles; theme stays near-monochrome by construction (no rainbow, no accent) | A prebuilt highlighter theme — hardcodes hex, fights the design system, risks rainbow palettes |
 
 ## Future Feature Map
 
